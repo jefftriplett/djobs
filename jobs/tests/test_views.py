@@ -1,12 +1,12 @@
 from django.contrib.auth.models import User
-from django.test import TestCase
+from test_plus.test import TestCase
 
 from jobs.models import JobListing, Flag
 from jobs.views import PublishJob, ArchiveJob
 
 
 class EditJobTestCase(TestCase):
-    fixtures = ["test_views.json"]
+    fixtures = ["fixtures/test_views.json"]
 
     data = {
         "title": "testjob",
@@ -45,7 +45,7 @@ class EditJobTestCase(TestCase):
 
 
 class ListingTestCase(TestCase):
-    fixtures = ["test_views.json"]
+    fixtures = ["fixtures/test_views.json"]
 
     def test_display_listings(self):
         user2 = User.objects.create_user("test", "test@example.com", "test")
@@ -79,7 +79,7 @@ class ListingTestCase(TestCase):
 
 
 class JobManagementTestCase(TestCase):
-    fixtures = ["test_views.json"]
+    fixtures = ["fixtures/test_views.json"]
 
     def setUp(self):
         self.client.login(username="apollo13", password="secret")
@@ -101,7 +101,7 @@ class JobManagementTestCase(TestCase):
 
 
 class FlagTestCase(TestCase):
-    fixtures = ["test_views.json"]
+    fixtures = ["fixtures/test_views.json"]
 
     def setUp(self):
         User.objects.filter(username="apollo13").update(is_superuser=True)
