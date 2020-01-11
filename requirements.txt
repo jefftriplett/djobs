@@ -21,8 +21,8 @@ environs[django]
 psycopg2-binary
 whitenoise
 
-django-baker
 django-test-plus
+model_bakery
 pytest
 pytest-black
 pytest-django
