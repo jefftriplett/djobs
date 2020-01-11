@@ -12,14 +12,14 @@ class JobFeed(Feed):
 
     def items(self):
         qs = JobListing.objects.filter(status=JobListing.STATUS_ACTIVE)
-        qs = qs.order_by('-created')
+        qs = qs.order_by("-created")
         return qs[:20]
 
     def item_title(self, item):
         return item.title
 
     def item_description(self, item):
-        return markdown(item.description, 'safe')
+        return markdown(item.description, "safe")
 
     def item_link(self, item):
-        return urlresolvers.reverse('job_detail', args=[item.id])
+        return urlresolvers.reverse("job_detail", args=[item.id])
