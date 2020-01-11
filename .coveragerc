@@ -1,4 +1,0 @@
-[run]
-source=jobs
-omit=jobs/migrations/*, jobs/tests/*, jobs/settings/*
-branch=true
