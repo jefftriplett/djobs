@@ -11,3 +11,8 @@ def flag(db, joblisting):
 @pytest.fixture()
 def joblisting(db):
     return baker.make("jobs.JobListing")
+
+
+@pytest.fixture()
+def user(db):
+    return baker.make("auth.User")
