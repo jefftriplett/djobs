@@ -32,10 +32,19 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
 ]
 
 # Third party apps
-INSTALLED_APPS += ["markdownify", "taggit"]
+INSTALLED_APPS += [
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    # "allauth.socialaccount.providers.github",
+    # "allauth.socialaccount.providers.gitlab",
+    "markdownify",
+    "taggit",
+]
 
 # Our apps
 INSTALLED_APPS += ["jobs"]
@@ -103,3 +112,16 @@ STATIC_URL = "/static/"
 STATIC_ROOT = str(BASE_DIR.joinpath("static"))
 STATICFILES_DIRS = (str(BASE_DIR.joinpath("frontend")),)
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+# Django Allauth settings
+
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+ACCOUNT_EMAIL_VERIFICATION = "none"
+# LOGIN_REDIRECT_URL = "/"
