@@ -17,8 +17,8 @@ django-allauth
 django-braces
 django-markdownify
 django-taggit
-environs
 environs[django]
+gunicorn
 psycopg2-binary
 whitenoise
 
