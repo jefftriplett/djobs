@@ -1,0 +1,32 @@
+version: "3.6"
+
+services:
+
+  db:
+    image: "postgres:11"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  web:
+    container_name: django-jobs
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
+    environment:
+      - "ALLOWED_HOSTS=*"
+      - "DATABASE_URL=postgres://postgres@db/postgres"
+      - "DJANGO_DEBUG=true"
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/src
+      - django-media:/src/media
+      - django-static:/src/static
+
+volumes:
+  django-media:
+  django-static:
+  postgres_data:

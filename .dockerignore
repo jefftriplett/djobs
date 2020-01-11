@@ -1,0 +1,16 @@
+*.db
+*.md
+*.md
+*.pid
+*.rdb
+*.zip
+.*
+.docker
+.editorconfig
+.git
+.gitignore
+.pytest_cache
+.rsync-exclude-from
+docker-compose*.yml
+docs
+static

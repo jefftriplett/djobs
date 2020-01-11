@@ -53,3 +53,31 @@ jobs:
           SECRET_KEY: 'for-testing'
         run: |
           python -m pytest
+
+  build:
+    needs: [test]
+    name: Build and Publish Docker image
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Git - Get Sources
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Docker - Build
+        run: |
+          docker build . --file .docker/Dockerfile --tag django-jobs
+
+      - name: Docker - Login
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com --username ${{ github.actor }} --password-stdin
+
+      - name: Docker - Tag
+        run: |
+          docker tag django-jobs docker.pkg.github.com/${{ github.repository }}/django-jobs:latest
+
+      - name: Docker - Push
+        run: |
+          docker push docker.pkg.github.com/${{ github.repository }}/django-jobs:latest
