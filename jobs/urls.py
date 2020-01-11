@@ -18,5 +18,4 @@ urlpatterns = [
     path("logout/", auth_views.LogoutView.as_view(next_page="/"), name="logout"),
     path("mine/", views.MyListings.as_view(), name="job_list_mine"),
     path("new/", views.JobCreate.as_view(), name="job_create"),
-    # url(r"", include("social_auth.urls")),
 ]
