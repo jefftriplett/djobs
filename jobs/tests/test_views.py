@@ -31,7 +31,7 @@ def test_job_edit_get(tp, django_assert_num_queries, joblisting):
 
 @pytest.mark.django_db
 def test_job_feed_get(tp, django_assert_num_queries):
-    with django_assert_num_queries(1):
+    with django_assert_num_queries(2):
         response = tp.get("job_feed")
     tp.assert_http_200_ok(response)
 
