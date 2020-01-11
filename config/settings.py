@@ -39,6 +39,12 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 ]
 
+# Third party apps
+INSTALLED_APPS += ["taggit"]
+
+# Our apps
+INSTALLED_APPS += ["jobs"]
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
