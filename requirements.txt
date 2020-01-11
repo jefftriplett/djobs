@@ -12,8 +12,13 @@
 # recaptcha-client==1.0.6
 
 Django<3.1
+dj-database-url
+django-markdownify
 django-taggit
+environs
+environs[django]
 psycopg2-binary
+whitenoise
 
 pytest
 pytest-black

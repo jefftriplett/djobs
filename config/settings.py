@@ -10,23 +10,18 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-import os
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+import environs
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
+env = environs.Env()
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "+o3u9jnlv2798-*(ap0@zwqok_ag4xl&n44mlu40zdxz9(be@-"
+BASE_DIR = environs.Path(__file__).parent.parent
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = env.str("SECRET_KEY")
 
-ALLOWED_HOSTS = []
+DEBUG = env.bool("DJANGO_DEBUG", default=False)
 
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=list())
 
 # Application definition
 
@@ -40,13 +35,14 @@ INSTALLED_APPS = [
 ]
 
 # Third party apps
-INSTALLED_APPS += ["taggit"]
+INSTALLED_APPS += ["markdownify", "taggit"]
 
 # Our apps
 INSTALLED_APPS += ["jobs"]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -60,7 +56,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [str(BASE_DIR.joinpath("templates"))],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -75,20 +71,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-
-# Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
+    "default": env.dj_db_url(
+        "DATABASE_URL", default="postgres://postgres@postgres/postgres"
+    )
 }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -98,10 +85,6 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/3.0/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
 
@@ -113,8 +96,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
+MEDIA_URL = "/media/"
+MEDIA_ROOT = str(BASE_DIR.joinpath("media"))
 
 STATIC_URL = "/static/"
+STATIC_ROOT = str(BASE_DIR.joinpath("static"))
+STATICFILES_DIRS = (str(BASE_DIR.joinpath("frontend")),)
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
