@@ -1,3 +1,5 @@
-### *[This repo is archived](https://github.com/jacobian-archive/about/blob/master/README.md), and will no longer be maintained.*
+# django-jobs - Fork of djobs
 
-http://djobs.herokuapp.com/
+:cloud_with_snow: This repo illustrates how to port code from an older version of Django (1.5) to more modern version (3.0). It's also a job board.
+
+The GitHub Actions CI script is pretty shiny too. 
