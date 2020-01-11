@@ -53,10 +53,9 @@
 {% endblock extrahead %}
 
 {% block content %}
-  {% load bootstrap_tags %}
   <form action="." method="POST" class="form-horizontal">
     {% csrf_token %}
-    {{ form|as_bootstrap }}
+    {{ form }}
     <input type="submit" class="btn btn-primary pull-right" value="Save {% if not form.instance.pk %}&amp; preview {% endif %}">
   </form>
 {% endblock %}
