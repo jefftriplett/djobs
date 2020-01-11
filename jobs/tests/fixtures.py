@@ -2,6 +2,8 @@ import pytest
 
 from model_bakery import baker
 
+from ..models import JobListing
+
 
 @pytest.fixture()
 def flag(db, joblisting):
@@ -10,7 +12,7 @@ def flag(db, joblisting):
 
 @pytest.fixture()
 def joblisting(db):
-    return baker.make("jobs.JobListing")
+    return baker.make("jobs.JobListing", status=JobListing.STATUS_ACTIVE)
 
 
 @pytest.fixture()

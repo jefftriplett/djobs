@@ -1,162 +1,40 @@
-from django.contrib.auth.models import User
-from test_plus.test import TestCase
-
-from jobs.models import JobListing, Flag
-from jobs.views import PublishJob, ArchiveJob
+import pytest
 
 
-class EditJobTestCase(TestCase):
-    fixtures = ["fixtures/test_views.json"]
-
-    data = {
-        "title": "testjob",
-        "description": "description",
-        "skills": "python, postgres",
-        "location": "here",
-        "employer_name": "me",
-        "contact_name": "me",
-        "contact_email": "123@example.com",
-        "remote": "yes",
-    }
-
-    def setUp(self):
-        self.client.login(username="apollo13", password="secret")
-
-    def test_job_creation(self):
-        response = self.client.post("/new/", self.data, follow=True)
-        job = JobListing.objects.get(title="testjob")
-        self.assertRedirects(response, "/%d/" % job.pk)
-        self.assertContains(response, "Your job listing has been saved as a draft.")
-
-    def test_job_edit(self):
-        data = self.data.copy()
-        job = JobListing.objects.get(pk=1)
-        data["title"] = "new jobtitle"
-        response = self.client.post("/%d/edit/" % job.pk, data, follow=True)
-        job = JobListing.objects.get(title="new jobtitle")
-        self.assertEqual(job.pk, 1)
-        self.assertRedirects(response, "/%d/" % job.pk)
-        self.assertContains(response, "Your job listing has been updated.")
-
-    def test_job_edit_view_get(self):
-        job = JobListing.objects.get(pk=1)
-        response = self.client.get("/%d/edit/" % job.pk)
-        self.assertContains(response, "super position")
+def test_job_detail_uri(tp, joblisting):
+    expected_url = f"/{joblisting.pk}/"
+    reversed_url = tp.reverse("job_detail", pk=joblisting.pk)
+    assert expected_url == reversed_url
 
 
-class ListingTestCase(TestCase):
-    fixtures = ["fixtures/test_views.json"]
-
-    def test_display_listings(self):
-        user2 = User.objects.create_user("test", "test@example.com", "test")
-        JobListing.objects.create(
-            creator=user2, title="test", status="active", description="test"
-        )
-
-        self.client.login(username="apollo13", password="secret")
-        response = self.client.get("/mine/")
-        data = ["<JobListing: draft post>", "<JobListing: super position>"]
-        self.assertQuerysetEqual(response.context["jobs"], data)
-
-        response = self.client.get("/")
-        data = [
-            "<JobListing: test>",
-            "<JobListing: draft post>",
-            "<JobListing: super position>",
-        ]
-        self.assertQuerysetEqual(response.context["jobs"], data)
-
-        # Testuser shouldn't see drafts by apollo13
-        self.client.login(username="test", password="test")
-        response = self.client.get("/")
-        data = ["<JobListing: test>", "<JobListing: super position>"]
-        self.assertQuerysetEqual(response.context["jobs"], data)
-
-    def test_feed(self):
-        response = self.client.get("/feed/")
-        self.assertContains(response, "super position")
-        self.assertNotContains(response, "draft post")
+def test_job_feed_uri(tp):
+    expected_url = "/feed/"
+    reversed_url = tp.reverse("job_feed")
+    assert expected_url == reversed_url
 
 
-class JobManagementTestCase(TestCase):
-    fixtures = ["fixtures/test_views.json"]
-
-    def setUp(self):
-        self.client.login(username="apollo13", password="secret")
-        self.listing = JobListing.objects.get(pk=1)
-
-    def test_archive(self):
-        response = self.client.post("/%d/archive/" % self.listing.pk, follow=True)
-        self.assertContains(response, ArchiveJob.success_message)
-        listing = JobListing.objects.get(pk=self.listing.pk)
-        self.assertEqual(listing.status, "archived")
-
-    def test_publish(self):
-        self.listing.status = "draft"
-        self.listing.save()
-        response = self.client.post("/%d/publish/" % self.listing.pk, follow=True)
-        self.assertContains(response, PublishJob.success_message)
-        listing = JobListing.objects.get(pk=self.listing.pk)
-        self.assertEqual(listing.status, "active")
+def test_job_list_uri(tp):
+    expected_url = "/"
+    reversed_url = tp.reverse("job_list")
+    assert expected_url == reversed_url
 
 
-class FlagTestCase(TestCase):
-    fixtures = ["fixtures/test_views.json"]
+@pytest.mark.django_db
+def test_job_detail_get(tp, django_assert_num_queries, joblisting):
+    with django_assert_num_queries(3):
+        response = tp.get("job_detail", pk=joblisting.pk)
+    tp.assert_http_200_ok(response)
 
-    def setUp(self):
-        User.objects.filter(username="apollo13").update(is_superuser=True)
-        self.listing = JobListing.objects.get(pk=1)
 
-    def test_flagging(self):
-        self.assertEqual(Flag.objects.count(), 0)
-        response = self.client.post("/%d/flag/" % self.listing.pk)
-        self.assertEqual(Flag.objects.count(), 1)
-        self.assertRedirects(response, "/%d/" % self.listing.pk)
+@pytest.mark.django_db
+def test_job_feed_get(tp, django_assert_num_queries):
+    with django_assert_num_queries(1):
+        response = tp.get("job_feed")
+    tp.assert_http_200_ok(response)
 
-        # Verify that reflagging doesn't work
-        response = self.client.post("/%d/flag/" % self.listing.pk)
-        self.assertEqual(Flag.objects.count(), 1)
 
-    def test_review_invalid_perms(self):
-        User.objects.create_user("invalid", "invalid", "invalid")
-        response = self.client.get("/flags/")
-        self.assertRedirects(response, "/login/?next=/flags/")
-        s = self.client.login(username="invalid", password="invalid")
-        self.assertTrue(s)
-        response = self.client.get("/flags/")
-        self.assertRedirects(response, "/login/?next=/flags/")
-
-    def test_review_get(self):
-        self.client.login(username="apollo13", password="secret")
-
-        response = self.client.get("/flags/")
-        self.assertContains(response, "No flags to review - good job!")
-
-        self.listing.flags.create()
-        response = self.client.get("/flags/")
-        self.assertContains(response, "Kill")
-        self.assertContains(response, "Keep")
-
-    def test_review_post(self):
-        self.client.login(username="apollo13", password="secret")
-
-        self.listing.flags.create()
-        data = {"job_id": self.listing.pk, "action": "keep"}
-        response = self.client.post("/flags/", data, follow=True)
-        self.assertContains(response, "&#39;%s&#39; kept." % self.listing)
-        self.assertFalse(Flag.objects.filter(cleared=False).exists())
-
-        self.listing.flags.create()
-        data = {"job_id": self.listing.pk, "action": "kill"}
-        response = self.client.post("/flags/", data, follow=True)
-        self.assertContains(response, "&#39;%s&#39; removed." % self.listing)
-        self.assertFalse(Flag.objects.filter(cleared=False).exists())
-        listing = JobListing.objects.get(pk=self.listing.pk)
-        self.assertEqual(listing.status, JobListing.STATUS_REMOVED)
-
-    def test_review_invalid_data(self):
-        self.client.login(username="apollo13", password="secret")
-        data = {"job_id": -1}
-        response = self.client.post("/flags/", data, follow=True)
-        self.assertRedirects(response, "/flags/")
-        self.assertEqual(len(response.context["messages"]), 0)
+@pytest.mark.django_db
+def test_job_list_get(tp, django_assert_num_queries):
+    with django_assert_num_queries(1):
+        response = tp.get("job_list")
+    tp.assert_http_200_ok(response)
