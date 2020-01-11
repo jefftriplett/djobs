@@ -5,7 +5,9 @@ from taggit.managers import TaggableManager
 
 
 class JobListing(models.Model):
-    creator = models.ForeignKey("auth.User", related_name="job_listings", on_delete=models.CASCADE)
+    creator = models.ForeignKey(
+        "auth.User", related_name="job_listings", on_delete=models.CASCADE
+    )
     created = models.DateTimeField(default=timezone.now)
 
     # Job info
@@ -81,6 +83,8 @@ class JobListing(models.Model):
 
 
 class Flag(models.Model):
-    job = models.ForeignKey("JobListing", related_name="flags", on_delete=models.CASCADE)
+    job = models.ForeignKey(
+        "JobListing", related_name="flags", on_delete=models.CASCADE
+    )
     when = models.DateTimeField(default=timezone.now)
     cleared = models.BooleanField(default=False)
