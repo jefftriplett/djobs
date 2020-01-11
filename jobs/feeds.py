@@ -1,6 +1,6 @@
 from django.contrib.syndication.views import Feed
-from django.contrib.markup.templatetags.markup import markdown
-from django.core import urlresolvers
+from django.urls import reverse
+from markdownify.templatetags.markdownify import markdownify
 
 from .models import JobListing
 
@@ -19,7 +19,7 @@ class JobFeed(Feed):
         return item.title
 
     def item_description(self, item):
-        return markdown(item.description, "safe")
+        return markdownify(item.description)
 
     def item_link(self, item):
-        return urlresolvers.reverse("job_detail", args=[item.id])
+        return reverse("job_detail", args=[item.id])

@@ -1,8 +1,10 @@
 import json
 
+from braces.views import LoginRequiredMixin, SuperuserRequiredMixin
 from django.contrib import messages
-from django.urls import reverse
 from django.db.models import Q, Count
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
 from django.views.generic import (
     View,
     TemplateView,
@@ -11,14 +13,10 @@ from django.views.generic import (
     CreateView,
     UpdateView,
 )
-from django.shortcuts import get_object_or_404, redirect
-
-from braces.views import LoginRequiredMixin, SuperuserRequiredMixin
-
 from taggit.models import Tag
 
-from .models import JobListing
 from .forms import JobListingForm
+from .models import JobListing
 
 
 class JobQuerysetMixin(object):

@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 
-# from . import feeds
+from . import feeds
 from . import views
 
 
@@ -12,11 +12,11 @@ urlpatterns = [
     path("<int:pk>/edit/", views.JobEdit.as_view(), name="job_edit"),
     path("<int:pk>/flag/", views.FlagJob.as_view(), name="job_flag"),
     path("<int:pk>/publish/", views.PublishJob.as_view(), name="job_publish"),
+    path("feed/", feeds.JobFeed(), name="job_feed"),
     path("flags/", views.ReviewFlags.as_view(), name="review_flags"),
     path("login/", views.Login.as_view(), name="login"),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("mine/", views.MyListings.as_view(), name="job_list_mine"),
     path("new/", views.JobCreate.as_view(), name="job_create"),
-    # path("feed/$", feeds.JobFeed(), name="job_feed"),
     # url(r"", include("social_auth.urls")),
 ]
