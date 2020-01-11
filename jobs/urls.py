@@ -15,7 +15,7 @@ urlpatterns = [
     path("feed/", feeds.JobFeed(), name="job_feed"),
     path("flags/", views.ReviewFlags.as_view(), name="review_flags"),
     path("login/", views.Login.as_view(), name="login"),
-    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
+    path("logout/", auth_views.LogoutView.as_view(next_page="/"), name="logout"),
     path("mine/", views.MyListings.as_view(), name="job_list_mine"),
     path("new/", views.JobCreate.as_view(), name="job_create"),
     # url(r"", include("social_auth.urls")),
