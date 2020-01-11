@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-  {% load url from future %}
   {% for job in jobs %}
     <div class="job">
       {% include "jobs/snippets/title.html" %}

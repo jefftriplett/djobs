@@ -28,7 +28,7 @@ class JobQuerysetMixin(object):
 
     def get_queryset(self):
         q = Q(status=JobListing.STATUS_ACTIVE)
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             q |= Q(creator=self.request.user)
         return self.model.objects.filter(q).order_by("-created")
 

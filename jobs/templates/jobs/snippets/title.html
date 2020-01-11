@@ -1,4 +1,3 @@
-{% load url from future %}
 <h3><a href="{% url "job_detail" job.id %}">{{ job.title }}</a> at
   {% if job.employer_website %}<a href="{{ job.employer_website }}">{% endif %}
   {{ job.employer_name }}
