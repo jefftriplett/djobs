@@ -1,7 +1,7 @@
 import json
 
 from django.contrib import messages
-from django.core import urlresolvers
+from django.urls import reverse
 from django.db.models import Q, Count
 from django.views.generic import (
     View,
@@ -95,7 +95,7 @@ class JobEditMixin(object):
         return super(JobEditMixin, self).form_valid(form)
 
     def get_success_url(self):
-        return urlresolvers.reverse("job_detail", args=(self.object.id,))
+        return reverse("job_detail", args=(self.object.id,))
 
 
 class JobCreate(LoginRequiredMixin, JobEditMixin, CreateView):

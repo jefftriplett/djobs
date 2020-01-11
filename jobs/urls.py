@@ -1,29 +1,27 @@
-from django.conf.urls import patterns, include, url
-from django.contrib import admin
+from django.urls import path
+
+# from . import feeds
 from . import views
-from . import feeds
 
-admin.autodiscover()
 
-urlpatterns = patterns(
-    "",
-    url(r"^$", views.JobList.as_view(), name="job_list"),
-    url(r"^new/$", views.JobCreate.as_view(), name="job_create"),
-    url(r"^mine/$", views.MyListings.as_view(), name="job_list_mine"),
-    url(r"^(?P<pk>\d+)/$", views.JobDetail.as_view(), name="job_detail"),
-    url(r"^(?P<pk>\d+)/edit/$", views.JobEdit.as_view(), name="job_edit"),
-    url(r"^(?P<pk>\d+)/publish/$", views.PublishJob.as_view(), name="job_publish"),
-    url(r"^(?P<pk>\d+)/archive/$", views.ArchiveJob.as_view(), name="job_archive"),
-    url(r"^(?P<pk>\d+)/flag/$", views.FlagJob.as_view(), name="job_flag"),
-    url(r"^feed/$", feeds.JobFeed(), name="job_feed"),
-    url(r"^login/$", views.Login.as_view(), name="login"),
-    url(r"^flags/$", views.ReviewFlags.as_view(), name="review_flags"),
-    url(
-        r"^logout/$",
-        "django.contrib.auth.views.logout",
-        {"next_page": "/"},
-        name="logout",
-    ),
-    url(r"^admin/", include(admin.site.urls)),
-    url(r"", include("social_auth.urls")),
-)
+urlpatterns = [
+    path("", views.JobList.as_view(), name="job_list"),
+    path("new/", views.JobCreate.as_view(), name="job_create"),
+    path("mine/", views.MyListings.as_view(), name="job_list_mine"),
+    path("<int:pk>/", views.JobDetail.as_view(), name="job_detail"),
+    path("<int:pk>/archive/", views.ArchiveJob.as_view(), name="job_archive"),
+    path("<int:pk>/edit/", views.JobEdit.as_view(), name="job_edit"),
+    path("<int:pk>/flag/", views.FlagJob.as_view(), name="job_flag"),
+    path("<int:pk>/publish/", views.PublishJob.as_view(), name="job_publish"),
+    path("flags/", views.ReviewFlags.as_view(), name="review_flags"),
+    # path("feed/$", feeds.JobFeed(), name="job_feed"),
+    # path("login/$", views.Login.as_view(), name="login"),
+    # url(
+    #     r"^logout/$",
+    #     "django.contrib.auth.views.logout",
+    #     {"next_page": "/"},
+    #     name="logout",
+    # ),
+    # url(r"^admin/", include(admin.site.urls)),
+    # url(r"", include("social_auth.urls")),
+]
