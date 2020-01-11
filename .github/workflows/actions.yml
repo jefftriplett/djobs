@@ -43,11 +43,13 @@ jobs:
       - name: Collect Static Assets
         env:
           DATABASE_URL: 'postgres://postgres:postgres@localhost:${{ job.services.postgres.ports[5432] }}/postgres'
+          SECRET_KEY: 'for-testing'
         run: |
           python manage.py collectstatic --noinput
 
       - name: Test with pytest
         env:
           DATABASE_URL: 'postgres://postgres:postgres@localhost:${{ job.services.postgres.ports[5432] }}/postgres'
+          SECRET_KEY: 'for-testing'
         run: |
           python -m pytest
