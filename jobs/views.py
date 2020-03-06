@@ -19,10 +19,14 @@ from .forms import JobListingForm
 from .models import JobListing
 
 
-class JobQuerysetMixin(object):
+class JobDetail(DetailView):
     """
-    Auth'd users see their own postings; everyone else only sees "active" ones.
+    Individual job listing view.
     """
+
+    context_object_name = "job"
+    model = JobListing
+    template_name = "jobs/detail.html"
 
     def get_queryset(self):
         q = Q(status=JobListing.STATUS_ACTIVE)
@@ -30,44 +34,40 @@ class JobQuerysetMixin(object):
             q |= Q(creator=self.request.user)
         return self.model.objects.filter(q).order_by("-created")
 
-
-class JobList(JobQuerysetMixin, ListView):
-    """
-    List of all published jobs.
-    """
-
-    model = JobListing
-    template_name = "jobs/index.html"
-    context_object_name = "jobs"
-    navitem = "all"
-
-
-class MyListings(LoginRequiredMixin, JobList):
-    """
-    "My listings" page.
-    """
-
-    template_name = "jobs/mine.html"
-    navitem = "mine"
-
-    def get_queryset(self):
-        return self.request.user.job_listings.all()
-
-
-class JobDetail(JobQuerysetMixin, DetailView):
-    """
-    Individual job listing view.
-    """
-
-    model = JobListing
-    template_name = "jobs/detail.html"
-    context_object_name = "job"
-
     def get_context_data(self, **kwargs):
         return super(JobDetail, self).get_context_data(
             user_can_edit=(self.object.creator == self.request.user),
             has_flagged="flagged_%s" % self.object.id in self.request.session,
         )
+
+
+class JobList(ListView):
+    """
+    List of all published jobs.
+    """
+
+    context_object_name = "jobs"
+    model = JobListing
+    template_name = "jobs/index.html"
+
+    # our custom fields
+    navitem = "all"
+
+
+class MyJobListings(LoginRequiredMixin, JobList):
+    """
+    "My listings" page.
+    """
+
+    context_object_name = "jobs"
+    model = JobListing
+    template_name = "jobs/mine.html"
+
+    # our custom fields
+    navitem = "mine"
+
+    def get_queryset(self):
+        return self.request.user.job_listings.all()
 
 
 class JobEditMixin(object):
@@ -127,7 +127,7 @@ class JobEdit(LoginRequiredMixin, JobEditMixin, UpdateView):
         return self.request.user.job_listings.all()
 
 
-class ChangeJobStatus(LoginRequiredMixin, View):
+class ChangeJobStatus(object):
     """
     Abstract class to change a job's status; see the concrete implentations below.
     """
@@ -140,18 +140,20 @@ class ChangeJobStatus(LoginRequiredMixin, View):
         return redirect("job_detail", job.id)
 
 
-class PublishJob(ChangeJobStatus):
+class PublishJob(LoginRequiredMixin, ChangeJobStatus, View):
     new_status = JobListing.STATUS_ACTIVE
     success_message = "Your job listing has been published."
 
 
-class ArchiveJob(ChangeJobStatus):
+class ArchiveJob(LoginRequiredMixin, ChangeJobStatus, View):
     new_status = JobListing.STATUS_ARCHIVED
     success_message = "Your job listing has been archived and is no longer public."
 
 
 class Login(TemplateView):
     template_name = "login.html"
+
+    # our custom fields
     navitem = "login"
 
 
