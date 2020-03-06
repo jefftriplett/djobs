@@ -26,19 +26,19 @@ class JobDetail(DetailView):
 
     context_object_name = "job"
     model = JobListing
-    template_name = "jobs/detail.html"
-
-    def get_queryset(self):
-        q = Q(status=JobListing.STATUS_ACTIVE)
-        if self.request.user.is_authenticated:
-            q |= Q(creator=self.request.user)
-        return self.model.objects.filter(q).order_by("-created")
+    template_name = "jobs/joblisting_detail.html"
 
     def get_context_data(self, **kwargs):
         return super(JobDetail, self).get_context_data(
             user_can_edit=(self.object.creator == self.request.user),
             has_flagged="flagged_%s" % self.object.id in self.request.session,
         )
+
+    def get_queryset(self):
+        q = Q(status=JobListing.STATUS_ACTIVE)
+        if self.request.user.is_authenticated:
+            q |= Q(creator=self.request.user)
+        return self.model.objects.filter(q).order_by("-created")
 
 
 class JobList(ListView):
@@ -48,7 +48,7 @@ class JobList(ListView):
 
     context_object_name = "jobs"
     model = JobListing
-    template_name = "jobs/index.html"
+    template_name = "jobs/joblisting_list.html"
 
     # our custom fields
     navitem = "all"
@@ -61,7 +61,7 @@ class MyJobListings(LoginRequiredMixin, JobList):
 
     context_object_name = "jobs"
     model = JobListing
-    template_name = "jobs/mine.html"
+    template_name = "jobs/my_joblisting_list.html"
 
     # our custom fields
     navitem = "mine"
@@ -79,8 +79,8 @@ class JobEditMixin(object):
         * redirect to the job detail on success
     """
 
-    model = JobListing
     form_class = JobListingForm
+    model = JobListing
 
     def get_context_data(self, **kwargs):
         context = super(JobEditMixin, self).get_context_data(**kwargs)
@@ -102,8 +102,10 @@ class JobCreate(LoginRequiredMixin, JobEditMixin, CreateView):
     """
 
     template_name = "jobs/edit.html"
-    success_message = "Your job listing has been saved as a draft."
+
+    # our custom fields
     navitem = "new"
+    success_message = "Your job listing has been saved as a draft."
 
     def get_form_kwargs(self):
         kwargs = super(JobCreate, self).get_form_kwargs()
@@ -121,6 +123,8 @@ class JobEdit(LoginRequiredMixin, JobEditMixin, UpdateView):
     """
 
     template_name = "jobs/edit.html"
+
+    # our custom fields
     success_message = "Your job listing has been updated."
 
     def get_queryset(self):
@@ -189,6 +193,8 @@ class ReviewFlags(LoginRequiredMixin, SuperuserRequiredMixin, TemplateView):
     """
 
     template_name = "flags.html"
+
+    # our custom fields
     navitem = "flags"
 
     def get_context_data(self, **kwargs):
