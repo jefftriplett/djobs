@@ -1,0 +1,29 @@
+# Markdown==2.2.1
+# django-braces==0.2.2
+# django-forms-bootstrap==2.0.3.post1
+# django-secure==0.1.2
+# django-social-auth==0.7.19
+# django-storages==1.1.6
+# gevent==0.13.8
+# greenlet==0.4.0
+# gunicorn==0.17.2
+# httplib2==0.7.7
+# oauth2==1.5.211
+# recaptcha-client==1.0.6
+
+Django<3.1
+dj-database-url
+django-allauth
+django-braces
+django-markdownify
+django-taggit
+environs[django]
+gunicorn
+psycopg2-binary
+whitenoise
+
+django-test-plus
+model_bakery
+pytest
+pytest-black
+pytest-django

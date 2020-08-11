@@ -1,4 +1,6 @@
-FROM python:3.7-stretch
+FROM segment/chamber:2 AS chamber
+
+FROM python:3.7-stretch AS dev
 
 ENV PIP_DISABLE_PIP_VERSION_CHECK 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -11,8 +13,10 @@ RUN set -ex && \
         -r /src/requirements.txt && \
     rm -rf /root/.cache
 
-COPY . /src/
-
 WORKDIR /src/
 
-ENTRYPOINT ["/src/docker-entrypoint.sh", "--"]
+FROM dev AS production
+
+COPY --from=chamber /chamber /bin/chamber
+
+COPY . /src/
