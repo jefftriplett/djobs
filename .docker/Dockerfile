@@ -2,7 +2,8 @@
 
 FROM segment/chamber:2 AS chamber
 
-FROM python:3.7-stretch AS dev
+
+FROM python:3.7-slim-buster AS dev
 
 ENV PIP_DISABLE_PIP_VERSION_CHECK 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -14,9 +15,9 @@ RUN --mount=type=cache,target=/root/.cache/pip pip install -r /src/requirements.
 
 WORKDIR /src/
 
+
 FROM dev AS production
 
 COPY --from=chamber /chamber /bin/chamber
 
 COPY . /src/
-#
