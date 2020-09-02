@@ -70,18 +70,17 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Docker - Build
-        run: |
-          docker build . --file .docker/Dockerfile --tag django-jobs
-
-      - name: Docker - Login
-        run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com --username ${{ github.actor }} --password-stdin
-
-      - name: Docker - Tag
-        run: |
-          docker tag django-jobs docker.pkg.github.com/${{ github.repository }}/django-jobs:latest
-
-      - name: Docker - Push
-        run: |
-          docker push docker.pkg.github.com/${{ github.repository }}/django-jobs:latest
+      - name: build and push image
+        uses: docker/build-push-action@v1
+        env:
+          DOCKER_BUILDKIT: 1
+          INPUT_CACHE_FROMS: ${{ github.repository }}/django-jobs:latest
+        with:
+          dockerfile: "./.docker/Dockerfile"
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          repository: ${{ github.repository }}/django-jobs
+          tag_with_ref: true
+          tag_with_sha: true
+          tags: latest
+          username: ${{ github.actor }}
