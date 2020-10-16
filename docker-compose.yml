@@ -15,11 +15,13 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     depends_on:
       - db
+    env_file:
+      - ./.env
     environment:
-      - "ALLOWED_HOSTS=*"
-      - "DATABASE_URL=postgres://postgres@db/postgres"
-      - "DJANGO_DEBUG=true"
-      - "SECRET_KEY=just-say-that-you-test-me"
+      - ALLOWED_HOSTS
+      - DATABASE_URL
+      - DJANGO_DEBUG
+      - SECRET_KEY
     ports:
       - "8000:8000"
     volumes:
