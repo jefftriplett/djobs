@@ -4,57 +4,132 @@
 #
 #    pip-compile
 #
-appdirs==1.4.4            # via black
-asgiref==3.2.10           # via django
-attrs==19.3.0             # via black, pytest
-black==19.10b0            # via pytest-black
-bleach==3.1.5             # via django-markdownify
-certifi==2020.6.20        # via requests
-chardet==3.0.4            # via requests
-click==7.1.2              # via black
-defusedxml==0.6.0         # via python3-openid
-dj-database-url==0.5.0    # via -r requirements.in, environs
-dj-email-url==1.0.1       # via environs
-django-allauth==0.42.0    # via -r requirements.in
-django-braces==1.14.0     # via -r requirements.in
-django-cache-url==3.1.2   # via environs
-django-markdownify==0.8.1  # via -r requirements.in
-django-taggit==1.3.0      # via -r requirements.in
-django-test-plus==1.4.0   # via -r requirements.in
-django==3.0.9             # via -r requirements.in, django-allauth, django-braces, django-markdownify, django-taggit, model-bakery
-environs[django]==8.0.0   # via -r requirements.in
-gunicorn==20.0.4          # via -r requirements.in
-idna==2.10                # via requests
-importlib-metadata==1.7.0  # via markdown, pluggy, pytest
-iniconfig==1.0.1          # via pytest
-markdown==3.2.2           # via django-markdownify
-marshmallow==3.7.1        # via environs
-model-bakery==1.1.1       # via -r requirements.in
-more-itertools==8.4.0     # via pytest
-oauthlib==3.1.0           # via requests-oauthlib
-packaging==20.4           # via bleach, pytest
-pathspec==0.8.0           # via black
-pluggy==0.13.1            # via pytest
-psycopg2-binary==2.8.5    # via -r requirements.in
-py==1.9.0                 # via pytest
-pyparsing==2.4.7          # via packaging
-pytest-black==0.3.10      # via -r requirements.in
-pytest-django==3.9.0      # via -r requirements.in
-pytest==6.0.1             # via -r requirements.in, pytest-black, pytest-django
-python-dotenv==0.14.0     # via environs
-python3-openid==3.2.0     # via django-allauth
-pytz==2020.1              # via django
-regex==2020.7.14          # via black
-requests-oauthlib==1.3.0  # via django-allauth
-requests==2.24.0          # via django-allauth, requests-oauthlib
-six==1.15.0               # via bleach, django-braces, packaging
-sqlparse==0.3.1           # via django
-toml==0.10.1              # via black, pytest, pytest-black
-typed-ast==1.4.1          # via black
-urllib3==1.25.10          # via requests
-webencodings==0.5.1       # via bleach
-whitenoise==5.2.0         # via -r requirements.in
-zipp==3.1.0               # via importlib-metadata
+appdirs==1.4.4
+    # via black
+asgiref==3.2.10
+    # via django
+attrs==19.3.0
+    # via
+    #   black
+    #   pytest
+black==19.10b0
+    # via pytest-black
+bleach==3.1.5
+    # via django-markdownify
+certifi==2020.6.20
+    # via requests
+chardet==3.0.4
+    # via requests
+click==7.1.2
+    # via black
+defusedxml==0.6.0
+    # via python3-openid
+dj-database-url==0.5.0
+    # via
+    #   -r requirements.in
+    #   environs
+dj-email-url==1.0.1
+    # via environs
+django-allauth==0.42.0
+    # via -r requirements.in
+django-braces==1.14.0
+    # via -r requirements.in
+django-cache-url==3.1.2
+    # via environs
+django-markdownify==0.8.1
+    # via -r requirements.in
+django-rest-framework==0.1.0
+    # via -r requirements.in
+django-taggit==1.3.0
+    # via -r requirements.in
+django-test-plus==1.4.0
+    # via -r requirements.in
+django==3.0.9
+    # via
+    #   -r requirements.in
+    #   django-allauth
+    #   django-braces
+    #   django-markdownify
+    #   django-taggit
+    #   djangorestframework
+    #   model-bakery
+djangorestframework==3.12.2
+    # via django-rest-framework
+environs[django]==8.0.0
+    # via -r requirements.in
+gunicorn==20.0.4
+    # via -r requirements.in
+idna==2.10
+    # via requests
+iniconfig==1.0.1
+    # via pytest
+markdown==3.2.2
+    # via django-markdownify
+marshmallow==3.7.1
+    # via environs
+model-bakery==1.1.1
+    # via -r requirements.in
+more-itertools==8.4.0
+    # via pytest
+oauthlib==3.1.0
+    # via requests-oauthlib
+packaging==20.4
+    # via
+    #   bleach
+    #   pytest
+pathspec==0.8.0
+    # via black
+pluggy==0.13.1
+    # via pytest
+psycopg2-binary==2.8.5
+    # via -r requirements.in
+py==1.9.0
+    # via pytest
+pyparsing==2.4.7
+    # via packaging
+pytest-black==0.3.10
+    # via -r requirements.in
+pytest-django==3.9.0
+    # via -r requirements.in
+pytest==6.0.1
+    # via
+    #   -r requirements.in
+    #   pytest-black
+    #   pytest-django
+python-dotenv==0.14.0
+    # via environs
+python3-openid==3.2.0
+    # via django-allauth
+pytz==2020.1
+    # via django
+regex==2020.7.14
+    # via black
+requests-oauthlib==1.3.0
+    # via django-allauth
+requests==2.24.0
+    # via
+    #   django-allauth
+    #   requests-oauthlib
+six==1.15.0
+    # via
+    #   bleach
+    #   django-braces
+    #   packaging
+sqlparse==0.3.1
+    # via django
+toml==0.10.1
+    # via
+    #   black
+    #   pytest
+    #   pytest-black
+typed-ast==1.4.1
+    # via black
+urllib3==1.25.10
+    # via requests
+webencodings==0.5.1
+    # via bleach
+whitenoise==5.2.0
+    # via -r requirements.in
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

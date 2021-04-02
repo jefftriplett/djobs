@@ -43,6 +43,7 @@ INSTALLED_APPS += [
     # "allauth.socialaccount.providers.github",
     # "allauth.socialaccount.providers.gitlab",
     "markdownify",
+    "rest_framework",
     "taggit",
 ]
 

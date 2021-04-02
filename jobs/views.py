@@ -18,6 +18,14 @@ from taggit.models import Tag
 from .forms import JobListingForm
 from .models import JobListing
 
+from rest_framework import viewsets
+
+from .serializers import JobListingSerializer
+from .models import JobListing
+
+class JobListingViewSet(viewsets.ModelViewSet):
+    queryset = JobListing.objects.all().order_by("title")
+    serializer_class = JobListingSerializer
 
 class JobDetail(DetailView):
     """

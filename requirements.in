@@ -16,6 +16,7 @@ dj-database-url
 django-allauth
 django-braces
 django-markdownify
+django-rest-framework
 django-taggit
 environs[django]
 gunicorn

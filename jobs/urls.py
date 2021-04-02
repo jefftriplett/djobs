@@ -1,9 +1,12 @@
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth import views as auth_views
+from rest_framework import routers
 
 from . import feeds
 from . import views
 
+router = routers.DefaultRouter()
+router.register(r'joblistings', views.JobListingViewSet)
 
 urlpatterns = [
     path("", views.JobList.as_view(), name="job_list"),
@@ -18,4 +21,6 @@ urlpatterns = [
     path("logout/", auth_views.LogoutView.as_view(next_page="/"), name="logout"),
     path("mine/", views.MyJobListings.as_view(), name="job_list_mine"),
     path("new/", views.JobCreate.as_view(), name="job_create"),
+    path("api-urls/", include(router.urls)),
+    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 ]
